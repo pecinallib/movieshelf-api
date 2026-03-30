@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  avatarUrl String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  favorites Favorite[]
+  lists     List[]
+  reviews   Review[]
+
+  @@map("users")
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  tmdbId    Int      @map("tmdb_id")
+  mediaType String   @map("media_type") // "movie" ou "tv"
+  title     String
+  posterPath String? @map("poster_path")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tmdbId, mediaType])
+  @@map("favorites")
+}
+
+model List {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  name        String
+  description String?
+  coverUrl    String?  @map("cover_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items ListItem[]
+
+  @@map("lists")
+}
+
+model ListItem {
+  id         String   @id @default(uuid())
+  listId     String   @map("list_id")
+  tmdbId     Int      @map("tmdb_id")
+  mediaType  String   @map("media_type")
+  title      String
+  posterPath String?  @map("poster_path")
+  addedAt    DateTime @default(now()) @map("added_at")
+
+  list List @relation(fields: [listId], references: [id], onDelete: Cascade)
+
+  @@unique([listId, tmdbId, mediaType])
+  @@map("list_items")
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  tmdbId    Int      @map("tmdb_id")
+  mediaType String   @map("media_type")
+  rating    Int      // 1-5
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tmdbId, mediaType])
+  @@map("reviews")
+}
