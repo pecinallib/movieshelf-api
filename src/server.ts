@@ -6,6 +6,7 @@ import { env } from './config/env.js';
 import authRoutes from './routes/auth.routes.js';
 import tmdbRoutes from './routes/tmdb.routes.js';
 import favoriteRoutes from './routes/favorite.routes.js';
+import reviewRoutes from './routes/review.routes.js';
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.get('/health', (_req, res) => {
 app.use('/auth', authRoutes);
 app.use('/tmdb', tmdbRoutes);
 app.use('/favorites', favoriteRoutes);
+app.use('/reviews', reviewRoutes);
 
 app.listen(env.PORT, () => {
   console.log(`🎬 MovieShelf API rodando na porta ${env.PORT}`);
