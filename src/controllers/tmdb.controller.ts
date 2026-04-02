@@ -50,7 +50,13 @@ export async function tvDetails(req: Request, res: Response): Promise<void> {
 
 export async function trending(req: Request, res: Response): Promise<void> {
   try {
-    const results = await getTrending('all', 'week');
+    const type = (req.query.type as string) || 'all';
+    const validTypes = ['all', 'movie', 'tv'];
+    const mediaType = validTypes.includes(type)
+      ? (type as 'all' | 'movie' | 'tv')
+      : 'all';
+
+    const results = await getTrending(mediaType, 'week');
     res.json(results);
   } catch (error) {
     console.error('Erro ao buscar trending:', error);
