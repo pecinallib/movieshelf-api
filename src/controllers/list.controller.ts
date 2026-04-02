@@ -38,7 +38,7 @@ export async function createList(
     res.status(201).json(list);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.errors[0].message });
+      res.status(400).json({ error: error.issues[0].message });
       return;
     }
     console.error('Erro ao criar lista:', error);
@@ -51,7 +51,7 @@ export async function updateList(
   res: Response,
 ): Promise<void> {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const data = updateListSchema.parse(req.body);
 
     const list = await prisma.list.findFirst({
@@ -71,7 +71,7 @@ export async function updateList(
     res.json(updated);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.errors[0].message });
+      res.status(400).json({ error: error.issues[0].message });
       return;
     }
     console.error('Erro ao atualizar lista:', error);
@@ -84,7 +84,7 @@ export async function deleteList(
   res: Response,
 ): Promise<void> {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const list = await prisma.list.findFirst({
       where: { id, userId: req.userId! },
@@ -127,7 +127,7 @@ export async function getListById(
   res: Response,
 ): Promise<void> {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
 
     const list = await prisma.list.findFirst({
       where: { id, userId: req.userId! },
@@ -150,7 +150,7 @@ export async function getListById(
 
 export async function addItem(req: AuthRequest, res: Response): Promise<void> {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { tmdbId, mediaType, title, posterPath } = addItemSchema.parse(
       req.body,
     );
@@ -192,7 +192,7 @@ export async function addItem(req: AuthRequest, res: Response): Promise<void> {
     res.status(201).json(item);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.errors[0].message });
+      res.status(400).json({ error: error.issues[0].message });
       return;
     }
     console.error('Erro ao adicionar item:', error);
@@ -205,7 +205,8 @@ export async function removeItem(
   res: Response,
 ): Promise<void> {
   try {
-    const { id, itemId } = req.params;
+    const id = req.params.id as string;
+    const itemId = req.params.itemId as string;
 
     const list = await prisma.list.findFirst({
       where: { id, userId: req.userId! },

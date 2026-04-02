@@ -50,7 +50,7 @@ export async function createReview(
     res.status(201).json(review);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.errors[0].message });
+      res.status(400).json({ error: error.issues[0].message });
       return;
     }
     console.error('Erro ao criar review:', error);
@@ -63,7 +63,8 @@ export async function updateReview(
   res: Response,
 ): Promise<void> {
   try {
-    const { tmdbId, mediaType } = req.params;
+    const tmdbId = req.params.tmdbId as string;
+    const mediaType = req.params.mediaType as string;
     const data = updateReviewSchema.parse(req.body);
 
     const review = await prisma.review.findUnique({
@@ -89,7 +90,7 @@ export async function updateReview(
     res.json(updated);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.errors[0].message });
+      res.status(400).json({ error: error.issues[0].message });
       return;
     }
     console.error('Erro ao atualizar review:', error);
@@ -102,7 +103,8 @@ export async function deleteReview(
   res: Response,
 ): Promise<void> {
   try {
-    const { tmdbId, mediaType } = req.params;
+    const tmdbId = req.params.tmdbId as string;
+    const mediaType = req.params.mediaType as string;
 
     const review = await prisma.review.findUnique({
       where: {
@@ -162,7 +164,8 @@ export async function getReview(
   res: Response,
 ): Promise<void> {
   try {
-    const { tmdbId, mediaType } = req.params;
+    const tmdbId = req.params.tmdbId as string;
+    const mediaType = req.params.mediaType as string;
 
     const review = await prisma.review.findUnique({
       where: {
