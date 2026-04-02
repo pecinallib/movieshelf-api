@@ -37,7 +37,7 @@ export async function register(req: Request, res: Response): Promise<void> {
     res.status(201).json({ user, token });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.errors[0].message });
+      res.status(400).json({ error: error.issues[0].message });
       return;
     }
     console.error('Erro no registro:', error);
@@ -69,7 +69,7 @@ export async function login(req: Request, res: Response): Promise<void> {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.errors[0].message });
+      res.status(400).json({ error: error.issues[0].message });
       return;
     }
     console.error('Erro no login:', error);

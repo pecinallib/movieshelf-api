@@ -47,7 +47,7 @@ export async function addFavorite(
     res.status(201).json(favorite);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: error.errors[0].message });
+      res.status(400).json({ error: error.issues[0].message });
       return;
     }
     console.error('Erro ao adicionar favorito:', error);
@@ -60,7 +60,8 @@ export async function removeFavorite(
   res: Response,
 ): Promise<void> {
   try {
-    const { tmdbId, mediaType } = req.params;
+    const tmdbId = req.params.tmdbId as string;
+    const mediaType = req.params.mediaType as string;
 
     const favorite = await prisma.favorite.findUnique({
       where: {
@@ -120,7 +121,8 @@ export async function checkFavorite(
   res: Response,
 ): Promise<void> {
   try {
-    const { tmdbId, mediaType } = req.params;
+    const tmdbId = req.params.tmdbId as string;
+    const mediaType = req.params.mediaType as string;
 
     const favorite = await prisma.favorite.findUnique({
       where: {

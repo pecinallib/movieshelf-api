@@ -8,9 +8,9 @@
  *
  * 🟢 You can import this file directly.
  */
-export type * from './models/User'
-export type * from './models/Favorite'
-export type * from './models/List'
-export type * from './models/ListItem'
-export type * from './models/Review'
-export type * from './commonInputTypes'
+export type * from './models/User.js'
+export type * from './models/Favorite.js'
+export type * from './models/List.js'
+export type * from './models/ListItem.js'
+export type * from './models/Review.js'
+export type * from './commonInputTypes.js'
