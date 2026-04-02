@@ -75,3 +75,34 @@ export async function getRecommendations(
 
   return response.json();
 }
+
+export async function getGenres(mediaType: 'movie' | 'tv') {
+  const url = `${env.TMDB_BASE_URL}/genre/${mediaType}/list?language=pt-BR`;
+  const response = await fetch(url, { headers });
+
+  if (!response.ok) {
+    throw new Error(`TMDB API error: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export async function discover(
+  mediaType: 'movie' | 'tv',
+  genreId?: number,
+  page = 1,
+) {
+  let url = `${env.TMDB_BASE_URL}/discover/${mediaType}?language=pt-BR&page=${page}&sort_by=popularity.desc`;
+
+  if (genreId) {
+    url += `&with_genres=${genreId}`;
+  }
+
+  const response = await fetch(url, { headers });
+
+  if (!response.ok) {
+    throw new Error(`TMDB API error: ${response.status}`);
+  }
+
+  return response.json();
+}
