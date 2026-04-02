@@ -8,8 +8,6 @@ import {
   discover,
 } from '../services/tmdb.service.js';
 
-import * as tmdbService from '../services/tmdb.service.js';
-
 export async function search(req: Request, res: Response): Promise<void> {
   try {
     const query = req.query.q as string;
@@ -68,7 +66,7 @@ export async function genres(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const data = await tmdbService.getGenres(type);
+    const data = await getGenres(type);
     res.json(data);
   } catch (error) {
     console.error('Erro ao buscar gêneros:', error);
@@ -90,7 +88,7 @@ export async function discoverMedia(
       return;
     }
 
-    const data = await tmdbService.discover(type, genreId, page);
+    const data = await discover(type, genreId, page);
     res.json(data);
   } catch (error) {
     console.error('Erro ao descobrir:', error);
