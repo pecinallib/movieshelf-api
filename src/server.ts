@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import { hodorGuard } from 'hodor-guard';
 import { env } from './config/env.js';
 import authRoutes from './routes/auth.routes.js';
 import tmdbRoutes from './routes/tmdb.routes.js';
@@ -16,6 +17,18 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(
+  hodorGuard({
+    rateLimit: true,
+    honeypot: true,
+    autoBlock: true,
+    rateLimitMax: 100,
+    rateLimitWindowMs: 15 * 60 * 1000,
+    riskScoreThreshold: 70,
+    blockTtlSeconds: 900,
+    logRequests: true,
+  }),
+);
+app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100,
@@ -23,7 +36,6 @@ app.use(
     legacyHeaders: false,
   }),
 );
-
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
